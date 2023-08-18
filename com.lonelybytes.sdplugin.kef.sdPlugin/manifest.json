@@ -1,0 +1,46 @@
+{
+  "Author" : "Alex Babaev",
+  "Description" : "Provides KEF LSX II, LS50, LS60 control.",
+  "CategoryIcon" : "category",
+  "Version" : "1.0",
+  "Name" : "com.lonelybytes.sdplugin.kef",
+  "Actions" : [
+    {
+      "States" : [
+        {
+          "Image" : "actionVolume"
+        }
+      ],
+      "Tooltip" : "Controls Volume",
+      "PropertyInspectorPath" : "PropertyInspector.Volume/index.html",
+      "Controllers" : [
+        "Keypad",
+        "Encoder"
+      ],
+      "UUID" : "com.lonelybytes.sdplugin.kef.volume",
+      "Encoder" : {
+        "layout" : "$B1",
+        "TriggerDescription" : {
+          "Push" : "Mute",
+          "Rotate" : "Change Volume"
+        }
+      },
+      "Icon" : "volumeIcon",
+      "Name" : "KEF Volume"
+    }
+  ],
+  "Software" : {
+    "MinimumVersion" : "5.0"
+  },
+  "URL" : "https://github.com/bealex/StreamDeckKEFPlugin",
+  "SDKVersion" : 2,
+  "OS" : [
+    {
+      "Platform" : "mac",
+      "MinimumVersion" : "11"
+    }
+  ],
+  "Category" : "KEF",
+  "CodePath" : "kefcli",
+  "Icon" : "pluginIcon"
+}

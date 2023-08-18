@@ -1,0 +1,31 @@
+{
+  "pins" : [
+    {
+      "identity" : "memoirs-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:redmadrobot-spb/memoirs-ios.git",
+      "state" : {
+        "revision" : "73cdf02a14cf1be18eacf0353490ef9465a2f22a"
+      }
+    },
+    {
+      "identity" : "streamdeckplugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/emorydunn/StreamDeckPlugin.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "6874e2e4269ba592442d8afca54474b53927b915"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser.git",
+      "state" : {
+        "revision" : "6b2aa2748a7881eebb9f84fb10c01293e15b52ca",
+        "version" : "0.5.0"
+      }
+    }
+  ],
+  "version" : 2
+}

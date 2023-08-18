@@ -1,0 +1,8 @@
+{
+  "Description": "Provides KEF LSX II, LS50, LS60 control.", 
+  "Name": "KEF", 
+  "com.lonelybytes.sdplugin.kef.volume": {
+    "Name": "KEF Volume", 
+    "Tooltip": "Controls KEF Volume"
+  }
+}
