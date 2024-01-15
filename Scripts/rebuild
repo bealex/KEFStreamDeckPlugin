@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+rm ./Package/com.lonelybytes.sdplugin.kef.sdPlugin/kefcli
+
+cp ./Package/.build/arm64-apple-macosx/debug/kefcli ./Package/com.lonelybytes.sdplugin.kef.sdPlugin/kefcli
+
+rm ./SDPlugin/com.lonelybytes.sdplugin.kef.streamDeckPlugin
+
+./Scripts/DistributionTool -b -i ./Package/com.lonelybytes.sdplugin.kef.sdPlugin -o SDPlugin
+
+open ./SDPlugin/com.lonelybytes.sdplugin.kef.streamDeckPlugin

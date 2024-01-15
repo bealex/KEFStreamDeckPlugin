@@ -1,0 +1,552 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FAF0AA082A5CFDB800C30487 /* KEFTestAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF0AA072A5CFDB800C30487 /* KEFTestAppApp.swift */; };
+		FAF0AA0A2A5CFDB800C30487 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF0AA092A5CFDB800C30487 /* ContentView.swift */; };
+		FAF0AA0C2A5CFDBA00C30487 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAF0AA0B2A5CFDBA00C30487 /* Assets.xcassets */; };
+		FAF0AA0F2A5CFDBA00C30487 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAF0AA0E2A5CFDBA00C30487 /* Preview Assets.xcassets */; };
+		FAF0AA192A5CFDEE00C30487 /* KEFControl in Frameworks */ = {isa = PBXBuildFile; productRef = FAF0AA182A5CFDEE00C30487 /* KEFControl */; };
+		FAF0AA222A5D09B200C30487 /* KEFTestAppIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF0AA212A5D09B200C30487 /* KEFTestAppIOSApp.swift */; };
+		FAF0AA242A5D09B200C30487 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF0AA232A5D09B200C30487 /* ContentView.swift */; };
+		FAF0AA262A5D09B400C30487 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAF0AA252A5D09B400C30487 /* Assets.xcassets */; };
+		FAF0AA292A5D09B400C30487 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAF0AA282A5D09B400C30487 /* Preview Assets.xcassets */; };
+		FAF0AA2E2A5D09C300C30487 /* KEFControl in Frameworks */ = {isa = PBXBuildFile; productRef = FAF0AA2D2A5D09C300C30487 /* KEFControl */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FAF0AA042A5CFDB800C30487 /* KEFTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KEFTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAF0AA072A5CFDB800C30487 /* KEFTestAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KEFTestAppApp.swift; sourceTree = "<group>"; };
+		FAF0AA092A5CFDB800C30487 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FAF0AA0B2A5CFDBA00C30487 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FAF0AA0E2A5CFDBA00C30487 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FAF0AA102A5CFDBA00C30487 /* KEFTestApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KEFTestApp.entitlements; sourceTree = "<group>"; };
+		FAF0AA162A5CFDE000C30487 /* Package */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Package; path = ../Package; sourceTree = "<group>"; };
+		FAF0AA1A2A5CFEDC00C30487 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FAF0AA1F2A5D09B200C30487 /* KEFTestAppIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KEFTestAppIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAF0AA212A5D09B200C30487 /* KEFTestAppIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KEFTestAppIOSApp.swift; sourceTree = "<group>"; };
+		FAF0AA232A5D09B200C30487 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FAF0AA252A5D09B400C30487 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FAF0AA282A5D09B400C30487 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FAF0AA2F2A5D0A2600C30487 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FAF0AA012A5CFDB800C30487 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF0AA192A5CFDEE00C30487 /* KEFControl in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAF0AA1C2A5D09B200C30487 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF0AA2E2A5D09C300C30487 /* KEFControl in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2DBA1CFFC8FE0931CE74EB1D /* xcschemes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = xcschemes;
+			path = KEFTestApp.xcodeproj/project.xcworkspace/xcuserdata/alex.xcuserdatad/xcschemes;
+			sourceTree = "<group>";
+		};
+		FAF0A9FB2A5CFDB800C30487 = {
+			isa = PBXGroup;
+			children = (
+				FAF0AA162A5CFDE000C30487 /* Package */,
+				FAF0AA062A5CFDB800C30487 /* KEFTestApp */,
+				FAF0AA202A5D09B200C30487 /* KEFTestAppIOS */,
+				FAF0AA052A5CFDB800C30487 /* Products */,
+				FAF0AA172A5CFDEE00C30487 /* Frameworks */,
+				2DBA1CFFC8FE0931CE74EB1D /* xcschemes */,
+			);
+			sourceTree = "<group>";
+		};
+		FAF0AA052A5CFDB800C30487 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FAF0AA042A5CFDB800C30487 /* KEFTestApp.app */,
+				FAF0AA1F2A5D09B200C30487 /* KEFTestAppIOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FAF0AA062A5CFDB800C30487 /* KEFTestApp */ = {
+			isa = PBXGroup;
+			children = (
+				FAF0AA1A2A5CFEDC00C30487 /* Info.plist */,
+				FAF0AA072A5CFDB800C30487 /* KEFTestAppApp.swift */,
+				FAF0AA092A5CFDB800C30487 /* ContentView.swift */,
+				FAF0AA0B2A5CFDBA00C30487 /* Assets.xcassets */,
+				FAF0AA102A5CFDBA00C30487 /* KEFTestApp.entitlements */,
+				FAF0AA0D2A5CFDBA00C30487 /* Preview Content */,
+			);
+			path = KEFTestApp;
+			sourceTree = "<group>";
+		};
+		FAF0AA0D2A5CFDBA00C30487 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				FAF0AA0E2A5CFDBA00C30487 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		FAF0AA172A5CFDEE00C30487 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FAF0AA202A5D09B200C30487 /* KEFTestAppIOS */ = {
+			isa = PBXGroup;
+			children = (
+				FAF0AA2F2A5D0A2600C30487 /* Info.plist */,
+				FAF0AA212A5D09B200C30487 /* KEFTestAppIOSApp.swift */,
+				FAF0AA232A5D09B200C30487 /* ContentView.swift */,
+				FAF0AA252A5D09B400C30487 /* Assets.xcassets */,
+				FAF0AA272A5D09B400C30487 /* Preview Content */,
+			);
+			path = KEFTestAppIOS;
+			sourceTree = "<group>";
+		};
+		FAF0AA272A5D09B400C30487 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				FAF0AA282A5D09B400C30487 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FAF0AA032A5CFDB800C30487 /* KEFTestApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAF0AA132A5CFDBA00C30487 /* Build configuration list for PBXNativeTarget "KEFTestApp" */;
+			buildPhases = (
+				FAF0AA002A5CFDB800C30487 /* Sources */,
+				FAF0AA012A5CFDB800C30487 /* Frameworks */,
+				FAF0AA022A5CFDB800C30487 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KEFTestApp;
+			packageProductDependencies = (
+				FAF0AA182A5CFDEE00C30487 /* KEFControl */,
+			);
+			productName = KEFTestApp;
+			productReference = FAF0AA042A5CFDB800C30487 /* KEFTestApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FAF0AA1E2A5D09B200C30487 /* KEFTestAppIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAF0AA2A2A5D09B400C30487 /* Build configuration list for PBXNativeTarget "KEFTestAppIOS" */;
+			buildPhases = (
+				FAF0AA1B2A5D09B200C30487 /* Sources */,
+				FAF0AA1C2A5D09B200C30487 /* Frameworks */,
+				FAF0AA1D2A5D09B200C30487 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KEFTestAppIOS;
+			packageProductDependencies = (
+				FAF0AA2D2A5D09C300C30487 /* KEFControl */,
+			);
+			productName = KEFTestAppIOS;
+			productReference = FAF0AA1F2A5D09B200C30487 /* KEFTestAppIOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FAF0A9FC2A5CFDB800C30487 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					FAF0AA032A5CFDB800C30487 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					FAF0AA1E2A5D09B200C30487 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = FAF0A9FF2A5CFDB800C30487 /* Build configuration list for PBXProject "KEFTestApp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FAF0A9FB2A5CFDB800C30487;
+			productRefGroup = FAF0AA052A5CFDB800C30487 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FAF0AA032A5CFDB800C30487 /* KEFTestApp */,
+				FAF0AA1E2A5D09B200C30487 /* KEFTestAppIOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FAF0AA022A5CFDB800C30487 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF0AA0F2A5CFDBA00C30487 /* Preview Assets.xcassets in Resources */,
+				FAF0AA0C2A5CFDBA00C30487 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAF0AA1D2A5D09B200C30487 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF0AA292A5D09B400C30487 /* Preview Assets.xcassets in Resources */,
+				FAF0AA262A5D09B400C30487 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FAF0AA002A5CFDB800C30487 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF0AA0A2A5CFDB800C30487 /* ContentView.swift in Sources */,
+				FAF0AA082A5CFDB800C30487 /* KEFTestAppApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAF0AA1B2A5D09B200C30487 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF0AA242A5D09B200C30487 /* ContentView.swift in Sources */,
+				FAF0AA222A5D09B200C30487 /* KEFTestAppIOSApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FAF0AA112A5CFDBA00C30487 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FAF0AA122A5CFDBA00C30487 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		FAF0AA142A5CFDBA00C30487 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = KEFTestApp/KEFTestApp.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"KEFTestApp/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2Y29N9EKUS;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = KEFTestApp/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Looking for KEF local tcp Bonjour service";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lonelybytes.KEFTestApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FAF0AA152A5CFDBA00C30487 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = KEFTestApp/KEFTestApp.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"KEFTestApp/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2Y29N9EKUS;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = KEFTestApp/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Looking for KEF local tcp Bonjour service";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lonelybytes.KEFTestApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FAF0AA2B2A5D09B400C30487 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"KEFTestAppIOS/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2Y29N9EKUS;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_EXPAND_BUILD_SETTINGS = NO;
+				INFOPLIST_FILE = KEFTestAppIOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = KEFTest;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lonelybytes.KEFTestAppIOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "(Dev) All Apps";
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FAF0AA2C2A5D09B400C30487 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"KEFTestAppIOS/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2Y29N9EKUS;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_EXPAND_BUILD_SETTINGS = NO;
+				INFOPLIST_FILE = KEFTestAppIOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = KEFTest;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lonelybytes.KEFTestAppIOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "(Dev) All Apps";
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FAF0A9FF2A5CFDB800C30487 /* Build configuration list for PBXProject "KEFTestApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAF0AA112A5CFDBA00C30487 /* Debug */,
+				FAF0AA122A5CFDBA00C30487 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAF0AA132A5CFDBA00C30487 /* Build configuration list for PBXNativeTarget "KEFTestApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAF0AA142A5CFDBA00C30487 /* Debug */,
+				FAF0AA152A5CFDBA00C30487 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAF0AA2A2A5D09B400C30487 /* Build configuration list for PBXNativeTarget "KEFTestAppIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAF0AA2B2A5D09B400C30487 /* Debug */,
+				FAF0AA2C2A5D09B400C30487 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FAF0AA182A5CFDEE00C30487 /* KEFControl */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KEFControl;
+		};
+		FAF0AA2D2A5D09C300C30487 /* KEFControl */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KEFControl;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = FAF0A9FC2A5CFDB800C30487 /* Project object */;
+}

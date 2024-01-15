@@ -1,0 +1,22 @@
+{
+  "pins" : [
+    {
+      "identity" : "keyboardshortcuts",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:sindresorhus/KeyboardShortcuts.git",
+      "state" : {
+        "revision" : "c252200141e4abaecf30c14ea474dc009f56d553",
+        "version" : "1.16.1"
+      }
+    },
+    {
+      "identity" : "memoirs-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:redmadrobot-spb/memoirs-ios.git",
+      "state" : {
+        "revision" : "73cdf02a14cf1be18eacf0353490ef9465a2f22a"
+      }
+    }
+  ],
+  "version" : 2
+}

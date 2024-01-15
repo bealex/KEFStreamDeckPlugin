@@ -1,0 +1,416 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2DBA12433774199453CCC552 /* KeyboardControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA14AA2B980DDB900DF9BD /* KeyboardControl.swift */; };
+		FA5AF8B32B5093F5006DBB91 /* KEFControlMenuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5AF8AC2B5093F5006DBB91 /* KEFControlMenuApp.swift */; };
+		FA5AF8B52B5093F5006DBB91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA5AF8B02B5093F5006DBB91 /* Assets.xcassets */; };
+		FA5AF8B62B5093F5006DBB91 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA5AF8B22B5093F5006DBB91 /* Preview Assets.xcassets */; };
+		FA78DB7E2B51CD6E00606508 /* KEFControl in Frameworks */ = {isa = PBXBuildFile; productRef = FA78DB7D2B51CD6E00606508 /* KEFControl */; };
+		FA78DB802B51CD9500606508 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = FA78DB7F2B51CD9500606508 /* KeyboardShortcuts */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2DBA14AA2B980DDB900DF9BD /* KeyboardControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardControl.swift; sourceTree = "<group>"; };
+		FA5AF8992B50938C006DBB91 /* KEFControlMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KEFControlMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA5AF8AC2B5093F5006DBB91 /* KEFControlMenuApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KEFControlMenuApp.swift; sourceTree = "<group>"; };
+		FA5AF8AF2B5093F5006DBB91 /* KEFControlMenu.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = KEFControlMenu.entitlements; sourceTree = "<group>"; };
+		FA5AF8B02B5093F5006DBB91 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FA5AF8B22B5093F5006DBB91 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FA5AF8B72B509431006DBB91 /* KEFControlCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = KEFControlCore; path = ../../../KEFControlCore; sourceTree = "<group>"; };
+		FA5AF8B82B509437006DBB91 /* KEFControlCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = KEFControlCore; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FA5AF8962B50938C006DBB91 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA78DB7E2B51CD6E00606508 /* KEFControl in Frameworks */,
+				FA78DB802B51CD9500606508 /* KeyboardShortcuts in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FA5AF8902B50938C006DBB91 = {
+			isa = PBXGroup;
+			children = (
+				FA5AF8AB2B5093F5006DBB91 /* Code */,
+				FA5AF8B82B509437006DBB91 /* KEFControlCore */,
+				FA5AF8AE2B5093F5006DBB91 /* Resources */,
+				FA5AF89A2B50938C006DBB91 /* Products */,
+				FA78DB7C2B51CD6E00606508 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		FA5AF89A2B50938C006DBB91 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA5AF8992B50938C006DBB91 /* KEFControlMenu.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FA5AF8AB2B5093F5006DBB91 /* Code */ = {
+			isa = PBXGroup;
+			children = (
+				FA5AF8AC2B5093F5006DBB91 /* KEFControlMenuApp.swift */,
+				2DBA14AA2B980DDB900DF9BD /* KeyboardControl.swift */,
+			);
+			path = Code;
+			sourceTree = "<group>";
+		};
+		FA5AF8AE2B5093F5006DBB91 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FA5AF8AF2B5093F5006DBB91 /* KEFControlMenu.entitlements */,
+				FA5AF8B02B5093F5006DBB91 /* Assets.xcassets */,
+				FA5AF8B12B5093F5006DBB91 /* Preview Content */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		FA5AF8B12B5093F5006DBB91 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				FA5AF8B22B5093F5006DBB91 /* Preview Assets.xcassets */,
+				FA5AF8B72B509431006DBB91 /* KEFControlCore */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		FA78DB7C2B51CD6E00606508 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FA5AF8982B50938C006DBB91 /* KEFControlMenu */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA5AF8A82B50938C006DBB91 /* Build configuration list for PBXNativeTarget "KEFControlMenu" */;
+			buildPhases = (
+				FA5AF8952B50938C006DBB91 /* Sources */,
+				FA5AF8962B50938C006DBB91 /* Frameworks */,
+				FA5AF8972B50938C006DBB91 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KEFControlMenu;
+			packageProductDependencies = (
+				FA78DB7D2B51CD6E00606508 /* KEFControl */,
+				FA78DB7F2B51CD9500606508 /* KeyboardShortcuts */,
+			);
+			productName = KEFControlMenu;
+			productReference = FA5AF8992B50938C006DBB91 /* KEFControlMenu.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FA5AF8912B50938C006DBB91 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					FA5AF8982B50938C006DBB91 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+				};
+			};
+			buildConfigurationList = FA5AF8942B50938C006DBB91 /* Build configuration list for PBXProject "KEFControlMenu" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FA5AF8902B50938C006DBB91;
+			packageReferences = (
+				FA78DB7B2B51CCDB00606508 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+			);
+			productRefGroup = FA5AF89A2B50938C006DBB91 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FA5AF8982B50938C006DBB91 /* KEFControlMenu */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FA5AF8972B50938C006DBB91 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA5AF8B62B5093F5006DBB91 /* Preview Assets.xcassets in Resources */,
+				FA5AF8B52B5093F5006DBB91 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FA5AF8952B50938C006DBB91 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA5AF8B32B5093F5006DBB91 /* KEFControlMenuApp.swift in Sources */,
+				2DBA12433774199453CCC552 /* KeyboardControl.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FA5AF8A62B50938C006DBB91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FA5AF8A72B50938C006DBB91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		FA5AF8A92B50938C006DBB91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Resources/KEFControlMenu.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2Y29N9EKUS;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "KEF Menu Control";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lonelybytes.KEFControlMenu;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "(Dev) KEF Control Menu Item";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FA5AF8AA2B50938C006DBB91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Resources/KEFControlMenu.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 2Y29N9EKUS;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "KEF Menu Control";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lonelybytes.KEFControlMenu;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "(Dev) KEF Control Menu Item";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FA5AF8942B50938C006DBB91 /* Build configuration list for PBXProject "KEFControlMenu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA5AF8A62B50938C006DBB91 /* Debug */,
+				FA5AF8A72B50938C006DBB91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA5AF8A82B50938C006DBB91 /* Build configuration list for PBXNativeTarget "KEFControlMenu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA5AF8A92B50938C006DBB91 /* Debug */,
+				FA5AF8AA2B50938C006DBB91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FA78DB7B2B51CCDB00606508 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:sindresorhus/KeyboardShortcuts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.16.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FA78DB7D2B51CD6E00606508 /* KEFControl */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KEFControl;
+		};
+		FA78DB7F2B51CD9500606508 /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FA78DB7B2B51CCDB00606508 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = FA5AF8912B50938C006DBB91 /* Project object */;
+}
