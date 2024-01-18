@@ -19,8 +19,14 @@ extension KeyboardShortcuts.Name {
 @Observable
 @MainActor
 class KeyboardControl {
+    var audioSystem: AudioSystem?
+    var playbackInfo: PlaybackInfo? {
+        didSet {
+            self.volume = Double(playbackInfo.map(\.volume) ?? 0) / 100.0
+        }
+    }
+
     var volume: Double = 0
-    var info: AudioSystem?
 
     private let kefControl: KEFControl = .init(api: KEFNetworkApi())
     @ObservationIgnored
@@ -34,15 +40,15 @@ class KeyboardControl {
 
                 switch event {
                     case .playback(let info):
+                        self.playbackInfo = info
                         self.volume = Double(info.volume) / 100.0
-                        print("Volume: \(info.volume)")
                     case .system(let info):
-                        self.info = info
+                        self.audioSystem = info
                         break
                 }
             }
-            volume = await Double(self.kefControl.playbackInfo.volume) / 100.0
-            info = await self.kefControl.audioSystem
+            audioSystem = await self.kefControl.audioSystem
+            playbackInfo = await self.kefControl.playbackInfo
         }
 
         KeyboardShortcuts.setShortcut(.init(.f17, modifiers: []), for: .volumeUp)
@@ -50,12 +56,18 @@ class KeyboardControl {
 
         KeyboardShortcuts.onKeyUp(for: .volumeUp) { [weak self] in
             Task {
-                try await self?.kefControl.changeVolume(by: -1)
+                guard let self else { return }
+
+                let newVolume = try await self.kefControl.changeVolume(by: -1)
+                self.playbackInfo?.volume = newVolume
             }
         }
         KeyboardShortcuts.onKeyUp(for: .volumeDown) { [weak self] in
             Task {
-                try await self?.kefControl.changeVolume(by: 1)
+                guard let self else { return }
+
+                let newVolume = try await self.kefControl.changeVolume(by: 1)
+                self.playbackInfo?.volume = newVolume
             }
         }
     }

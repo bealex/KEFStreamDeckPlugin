@@ -16,6 +16,11 @@ public class KEFNetworkApi: KEFApi {
     private static let pollingUrlSessionConfiguration: URLSessionConfiguration = {
         var result = URLSessionConfiguration.default
         result.httpMaximumConnectionsPerHost = 10
+        result.timeoutIntervalForRequest = 2
+        result.waitsForConnectivity = true
+        result.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        result.urlCache = nil
+        result.httpShouldUsePipelining = true
         return result
     }()
     private static let urlSessionForPolling: URLSession = URLSession(configuration: pollingUrlSessionConfiguration)
@@ -151,9 +156,14 @@ public class KEFNetworkApi: KEFApi {
 
                 memoir.debug("Event polling initialized (id: \(subscriptionId))")
                 while isEventPollingStarted {
-                    let events = try await pollEvents(subscriptionId: subscriptionId, ip: ip)
-                    events.forEach {
-                        continuation.yield($0)
+                    do {
+                        let events = try await pollEvents(subscriptionId: subscriptionId, ip: ip)
+                        events.forEach {
+                            continuation.yield($0)
+                        }
+                    } catch {
+                        memoir.error("Problem with polling: \(error)")
+                        try await Task.sleep(for: .seconds(5))
                     }
                 }
                 continuation.finish()

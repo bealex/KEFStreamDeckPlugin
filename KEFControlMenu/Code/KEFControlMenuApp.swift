@@ -15,23 +15,24 @@ struct KEFControlMenuApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            VStack(alignment: .leading) {
-                Text("Model: \(keyboardConfig.info.map { "\($0.model)" } ?? "—")")
-                Text("Name: \(keyboardConfig.info.map { "\($0.name)" } ?? "—")")
-                Button("Quit") { NSApplication.shared.terminate(nil) }
-                    .keyboardShortcut("Q")
-            }
+            Text("LSX System")
+            Text("Model: \(keyboardConfig.audioSystem.map { "\($0.model)" } ?? "—")")
+            Text("Name: \(keyboardConfig.audioSystem.map { "\($0.name)" } ?? "—")")
+            Divider()
+            Button { NSApplication.shared.terminate(nil) } label: { Label("Quit", systemImage: "door.right.hand.open") }
+                .keyboardShortcut("Q")
         } label: {
             let height: CGFloat = 18
             let size = NSSize(width: height, height: height)
-            let volumeDegrees = 360 * keyboardConfig.volume
+//            let volumeDegrees = 360 * keyboardConfig.volume
             let volumeText = Int(round(keyboardConfig.volume * 99))
+            let isOn = !(keyboardConfig.playbackInfo?.isMuted ?? true || keyboardConfig.playbackInfo?.source != .usb)
             Image(size: size) { context in
                 let frame = NSRect(origin: .zero, size: size)
-                let radius = size.width / 2
-                let center = CGPoint(x: radius, y: radius)
+//                let radius = size.width / 2
+//                let center = CGPoint(x: radius, y: radius)
 
-                let color = Color.primary
+                let color = isOn ? Color.primary : Color.gray
 
 //                var arc = Path()
 //                arc.move(to: center)
@@ -51,7 +52,7 @@ struct KEFControlMenuApp: App {
                 context.draw(valueString, at: .init(x: 9.25, y: 9), anchor: .center)
             }
         }
-        .menuBarExtraStyle(.window)
+        .menuBarExtraStyle(.menu)
     }
 }
 
