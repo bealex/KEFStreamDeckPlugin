@@ -33,18 +33,19 @@ class KeyboardControl {
     private var kefEventsSubscription: AnyCancellable?
 
     init() {
-        Task { @MainActor in
+        Task {
             await kefControl.set(ip: "192.168.23.106", andStartStreaming: true)
             kefEventsSubscription = await kefControl.eventPublisher.sink { [weak self] event in
                 guard let self else { return }
 
-                switch event {
-                    case .playback(let info):
-                        self.playbackInfo = info
-                        self.volume = Double(info.volume) / 100.0
-                    case .system(let info):
-                        self.audioSystem = info
-                        break
+                Task { @MainActor in
+                    switch event {
+                        case .playback(let info):
+                            self.playbackInfo = info
+                            self.volume = Double(info.volume) / 100.0
+                        case .system(let info):
+                            self.audioSystem = info
+                    }
                 }
             }
             audioSystem = await self.kefControl.audioSystem
@@ -59,15 +60,19 @@ class KeyboardControl {
                 guard let self else { return }
 
                 let newVolume = try await self.kefControl.changeVolume(by: -1)
-                self.playbackInfo?.volume = newVolume
+                Task { @MainActor in
+                    self.playbackInfo?.volume = newVolume
+                }
             }
         }
         KeyboardShortcuts.onKeyUp(for: .volumeDown) { [weak self] in
-            Task { @MainActor in
+            Task {
                 guard let self else { return }
 
                 let newVolume = try await self.kefControl.changeVolume(by: 1)
-                self.playbackInfo?.volume = newVolume
+                Task { @MainActor in
+                    self.playbackInfo?.volume = newVolume
+                }
             }
         }
     }
