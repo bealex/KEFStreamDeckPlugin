@@ -96,18 +96,20 @@ public class KEFNetworkApi: KEFApi {
         urlRequest.httpBody = bodyString.data(using: .utf8)
 
         let (response, data) = try await request(urlRequest, in: Self.urlSession)
-        guard ((response as? HTTPURLResponse)?.statusCode ?? 0) / 100 == 2 else {
+        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+        guard statusCode / 100 == 2 else {
             memoir.error("Error: \(String(data: data, encoding: .utf8) ?? "nil")")
-            throw KEFProblem.httpError(data, response)
+            throw KEFProblem.httpError(data, response, statusCode: statusCode)
         }
     }
 
     private func getValue<Type>(path: String, roles: String, ip: String) async throws -> RawValue<Type> {
         let urlRequest = URLRequest(url: try getValueUrl(address: ip, path: path, roles: roles))
         let (response, data) = try await request(urlRequest, in: Self.urlSession)
-        guard ((response as? HTTPURLResponse)?.statusCode ?? 0) / 100 == 2 else {
+        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+        guard statusCode / 100 == 2 else {
             memoir.error("Error: \(String(data: data, encoding: .utf8) ?? "nil")")
-            throw KEFProblem.httpError(data, response)
+            throw KEFProblem.httpError(data, response, statusCode: statusCode)
         }
 
         let valueArray = try decoder.decode([RawValue<Type>].self, from: data)
@@ -149,18 +151,23 @@ public class KEFNetworkApi: KEFApi {
             }
 
             Task {
-                guard let subscriptionId = try await subscribe(toJSONPaths: subscriptionList, ip: ip) else {
-                    memoir.error("Can't get subscriptionId")
-                    return continuation.finish()
-                }
-
-                memoir.debug("Event polling initialized (id: \(subscriptionId))")
+                var subscriptionId: String?
                 while isEventPollingStarted {
                     do {
-                        let events = try await pollEvents(subscriptionId: subscriptionId, ip: ip)
-                        events.forEach {
-                            continuation.yield($0)
+                        if let subscriptionId {
+                            let events = try await pollEvents(subscriptionId: subscriptionId, ip: ip)
+                            events.forEach {
+                                continuation.yield($0)
+                            }
+                        } else {
+                            subscriptionId = try await subscribe(toJSONPaths: subscriptionList, ip: ip)
+                            if let subscriptionId {
+                                memoir.debug("Event polling initialized (id: \(subscriptionId))")
+                            }
                         }
+                    } catch KEFProblem.httpError(_, _, 400) {
+                        memoir.error("Subscription was invalidated on the backend (we got a 400)")
+                        subscriptionId = nil
                     } catch {
                         memoir.error("Problem with polling: \(error)")
                         try await Task.sleep(for: .seconds(5))
@@ -183,9 +190,10 @@ public class KEFNetworkApi: KEFApi {
         var urlRequest = URLRequest(url: try subscribeUrl(subscribeJson: toJSONPaths, address: ip))
         urlRequest.setValue("keep-alive", forHTTPHeaderField: "Connection")
         let (response, data) = try await request(urlRequest, in: Self.urlSessionForPolling)
-        guard ((response as? HTTPURLResponse)?.statusCode ?? 0) / 100 == 2 else {
+        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+        guard statusCode / 100 == 2 else {
             memoir.error("Error: \(String(data: data, encoding: .utf8) ?? "nil")")
-            throw KEFProblem.httpError(data, response)
+            throw KEFProblem.httpError(data, response, statusCode: statusCode)
         }
 
         return String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\"", with: "")
@@ -195,9 +203,10 @@ public class KEFNetworkApi: KEFApi {
         var urlRequest = URLRequest(url: try longPollUrl(subscriptionId: subscriptionId, address: ip))
         urlRequest.setValue("keep-alive", forHTTPHeaderField: "Connection")
         let (response, data) = try await request(urlRequest, in: Self.urlSessionForPolling)
-        guard ((response as? HTTPURLResponse)?.statusCode ?? 0) / 100 == 2 else {
+        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+        guard statusCode / 100 == 2 else {
             memoir.error("Error: \(String(data: data, encoding: .utf8) ?? "nil")")
-            throw KEFProblem.httpError(data, response)
+            throw KEFProblem.httpError(data, response, statusCode: statusCode)
         }
         guard let json = try JSONSerialization.jsonObject(with: data, options: [ .fragmentsAllowed ]) as? [Any] else {
             memoir.error("Can't parse \(String(data: data, encoding: .utf8) ?? "nil")")

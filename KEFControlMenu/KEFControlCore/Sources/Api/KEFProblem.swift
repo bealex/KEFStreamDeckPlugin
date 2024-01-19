@@ -10,7 +10,7 @@ import Foundation
 
 enum KEFProblem: Error {
     case cantProcessUrl
-    case httpError(Data, URLResponse)
+    case httpError(Data, URLResponse, statusCode: Int)
     case jsonError(Data, URLResponse)
     case cantSerializeRequest
     case noValueInResponse
