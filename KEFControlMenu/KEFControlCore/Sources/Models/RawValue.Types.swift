@@ -32,6 +32,7 @@ extension PlaybackInfo.Source: RawValueType {
         let string = try container.decode(String.self)
         switch string {
             case "usb": self = .usb
+            case "optical": self = .optical
             case "standby": self = .standby
             default: self = .unsupported
         }
@@ -41,6 +42,7 @@ extension PlaybackInfo.Source: RawValueType {
         var container = encoder.singleValueContainer()
         switch self {
             case .usb: try container.encode("usb")
+            case .optical: try container.encode("optical")
             case .standby: try container.encode("standby")
             case .unsupported:
                 throw EncodingError.invalidValue(self, .init(codingPath: [], debugDescription: "Can't encode uncnown source"))

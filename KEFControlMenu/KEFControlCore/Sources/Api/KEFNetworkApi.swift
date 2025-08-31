@@ -12,7 +12,7 @@ import Memoirs
 public class KEFNetworkApi: KEFApi {
     private lazy var memoir: TracedMemoir = TracedMemoir(object: self, memoir: basicMemoir)
 
-    private static let urlSession: URLSession = URLSession(configuration: URLSessionConfiguration.default)
+    private static let urlSession: URLSession = URLSession(configuration: pollingUrlSessionConfiguration)
     private static let pollingUrlSessionConfiguration: URLSessionConfiguration = {
         var result = URLSessionConfiguration.default
         result.httpMaximumConnectionsPerHost = 10

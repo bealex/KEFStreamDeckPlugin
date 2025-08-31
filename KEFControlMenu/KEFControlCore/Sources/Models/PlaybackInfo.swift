@@ -8,10 +8,11 @@
 
 import Foundation
 
-public struct PlaybackInfo {
+public struct PlaybackInfo: Equatable {
     public enum Source: Hashable {
         case standby
         case usb
+        case optical
 
         case unsupported
     }

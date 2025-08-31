@@ -14,7 +14,7 @@
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:redmadrobot-spb/memoirs-ios.git",
       "state" : {
-        "revision" : "73cdf02a14cf1be18eacf0353490ef9465a2f22a"
+        "revision" : "fc33c113628506ce8338c2a5216b7fff6af87e30"
       }
     }
   ],

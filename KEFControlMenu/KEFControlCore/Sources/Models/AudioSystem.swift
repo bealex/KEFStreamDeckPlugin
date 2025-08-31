@@ -8,8 +8,8 @@
 
 import Foundation
 
-public struct AudioSystem {
-    public enum Model {
+public struct AudioSystem: Equatable {
+    public enum Model: Equatable {
         case lsxII
         case ls50
         case ls60

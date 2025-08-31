@@ -1,5 +1,5 @@
 //
-// KeyboardControl
+// KEFControlLogic
 // KEFControlMenu
 //
 // Created by Alexander Babaev on 15 January 2024.
@@ -17,8 +17,7 @@ extension KeyboardShortcuts.Name {
 }
 
 @Observable
-@MainActor
-class KeyboardControl {
+class KEFControlLogic {
     var audioSystem: AudioSystem?
     var playbackInfo: PlaybackInfo? {
         didSet {
@@ -28,13 +27,16 @@ class KeyboardControl {
 
     var volume: Double = 0
 
-    private let kefControl: KEFControl = .init(api: KEFNetworkApi())
+    @ObservationIgnored
+    private let kefControl: KEFControl
     @ObservationIgnored
     private var kefEventsSubscription: AnyCancellable?
 
     init() {
-        Task {
-            await kefControl.set(ip: "192.168.23.106", andStartStreaming: true)
+        kefControl = .init(api: KEFNetworkApi())
+
+        Task { @MainActor [self] in
+            await kefControl.set(ip: "192.168.23.106", defaultInput: .optical, andStartStreaming: true)
             kefEventsSubscription = await kefControl.eventPublisher.sink { [weak self] event in
                 guard let self else { return }
 
@@ -56,9 +58,9 @@ class KeyboardControl {
         KeyboardShortcuts.setShortcut(.init(.f19, modifiers: []), for: .volumeDown)
 
         KeyboardShortcuts.onKeyUp(for: .volumeUp) { [weak self] in
-            Task { @MainActor in
-                guard let self else { return }
+            guard let self else { return }
 
+            Task {
                 let newVolume = try await self.kefControl.changeVolume(by: -1)
                 Task { @MainActor in
                     self.playbackInfo?.volume = newVolume
@@ -66,14 +68,20 @@ class KeyboardControl {
             }
         }
         KeyboardShortcuts.onKeyUp(for: .volumeDown) { [weak self] in
-            Task {
-                guard let self else { return }
+            guard let self else { return }
 
+            Task {
                 let newVolume = try await self.kefControl.changeVolume(by: 1)
                 Task { @MainActor in
                     self.playbackInfo?.volume = newVolume
                 }
             }
+        }
+    }
+
+    func update(input: PlaybackInfo.Source) {
+        Task {
+            await kefControl.update(defaultInput: input)
         }
     }
 }

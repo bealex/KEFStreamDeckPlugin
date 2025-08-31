@@ -16,6 +16,7 @@ public class KEFNetworkApi: KEFApi {
     private static let pollingUrlSessionConfiguration: URLSessionConfiguration = {
         var result = URLSessionConfiguration.default
         result.httpMaximumConnectionsPerHost = 10
+        result.waitsForConnectivity = true
         return result
     }()
     private static let urlSessionForPolling: URLSession = URLSession(configuration: pollingUrlSessionConfiguration)

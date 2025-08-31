@@ -20,6 +20,7 @@ public actor KEFControl {
 
     private var api: KEFApi
     private var ip: String?
+    private var defaultInput: PlaybackInfo.Source = .usb
 
     private(set) public var audioSystem: AudioSystem = .init(name: "KEF", model: .unknown)
     private(set) public var playbackInfo: PlaybackInfo = .init()
@@ -28,8 +29,9 @@ public actor KEFControl {
         self.api = api
     }
 
-    public func set(ip: String, andStartStreaming: Bool) async {
+    public func set(ip: String, defaultInput: PlaybackInfo.Source, andStartStreaming: Bool) async {
         self.ip = ip
+        self.defaultInput = defaultInput
 
         do {
             if streamingStarted || andStartStreaming {
@@ -38,6 +40,15 @@ public actor KEFControl {
             } else {
                 try await updateInformationFromAudioSystem()
             }
+        } catch {
+            memoir.error(error)
+        }
+    }
+
+    public func update(defaultInput: PlaybackInfo.Source) async {
+        self.defaultInput = defaultInput
+        do {
+            try await setInput(to: defaultInput)
         } catch {
             memoir.error(error)
         }
@@ -81,7 +92,14 @@ public actor KEFControl {
         guard let ip else { throw KEFProblem.isNotSetup("No ip address") }
         guard playbackInfo.source == .standby else { return }
 
-        try await api.set(value: .usb, for: \.physicalSource, ip: ip)
+        try await api.set(value: defaultInput, for: \.physicalSource, ip: ip)
+    }
+
+    public func setInput(to input: PlaybackInfo.Source) async throws {
+        guard let ip else { throw KEFProblem.isNotSetup("No ip address") }
+        guard playbackInfo.source != .standby else { return try await turnOnIfNeeded() }
+
+        try await api.set(value: defaultInput, for: \.physicalSource, ip: ip)
     }
 
     private var lastGotVolume: Int32 = -1
