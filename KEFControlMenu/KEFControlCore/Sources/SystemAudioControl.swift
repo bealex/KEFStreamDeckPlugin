@@ -12,14 +12,28 @@ import Foundation
 import Memoirs
 
 public struct AudioOutputDevice: Equatable, Sendable {
+    /// What the device physically is, as far as CoreAudio is willing to say.
+    public enum Kind: Equatable, Sendable {
+        case builtInSpeakers
+        case headphones
+        case bluetooth
+        case airPlay
+        case display
+        case external
+        case virtual
+        case unknown
+    }
+
     public let id: AudioDeviceID
     public let name: String
     public let uid: String
+    public let kind: Kind
 
-    public init(id: AudioDeviceID, name: String, uid: String) {
+    public init(id: AudioDeviceID, name: String, uid: String, kind: Kind) {
         self.id = id
         self.name = name
         self.uid = uid
+        self.kind = kind
     }
 }
 
@@ -183,7 +197,32 @@ public final class SystemAudioControl {
 
         let name = string(at: Self.address(kAudioObjectPropertyName), from: deviceID)
         let uid = string(at: Self.address(kAudioDevicePropertyDeviceUID), from: deviceID)
-        return AudioOutputDevice(id: deviceID, name: name ?? "Unknown", uid: uid ?? "")
+        return AudioOutputDevice(id: deviceID, name: name ?? "Unknown", uid: uid ?? "", kind: kind(of: deviceID))
+    }
+
+    private static func kind(of deviceID: AudioDeviceID) -> AudioOutputDevice.Kind {
+        let transportAddress = address(kAudioDevicePropertyTransportType)
+        guard let transport = value(UInt32.self, at: transportAddress, from: deviceID) else { return .unknown }
+
+        switch transport {
+            case kAudioDeviceTransportTypeBuiltIn: return builtInKind(of: deviceID)
+            case kAudioDeviceTransportTypeBluetooth, kAudioDeviceTransportTypeBluetoothLE: return .bluetooth
+            case kAudioDeviceTransportTypeAirPlay: return .airPlay
+            case kAudioDeviceTransportTypeHDMI, kAudioDeviceTransportTypeDisplayPort: return .display
+            case kAudioDeviceTransportTypeVirtual, kAudioDeviceTransportTypeAggregate: return .virtual
+            case kAudioDeviceTransportTypeUSB, kAudioDeviceTransportTypeThunderbolt: return .external
+            case kAudioDeviceTransportTypeFireWire, kAudioDeviceTransportTypePCI: return .external
+            default: return .unknown
+        }
+    }
+
+    /// Built-in output is the speakers or the headphone jack, depending on what is plugged in.
+    private static func builtInKind(of deviceID: AudioDeviceID) -> AudioOutputDevice.Kind {
+        let sourceAddress = address(kAudioDevicePropertyDataSource, scope: kAudioObjectPropertyScopeOutput)
+        guard let source = value(UInt32.self, at: sourceAddress, from: deviceID) else { return .builtInSpeakers }
+
+        // 'hdpn' is the headphone jack; anything else on built-in output is the internal speakers.
+        return source == 0x6864_706E ? .headphones : .builtInSpeakers
     }
 }
 

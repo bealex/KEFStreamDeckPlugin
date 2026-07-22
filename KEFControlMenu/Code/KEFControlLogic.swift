@@ -30,7 +30,17 @@ class KEFControlLogic {
     private(set) var playbackInfo: PlaybackInfo?
 
     private(set) var target: Target = .system(isSupported: false)
-    private(set) var outputDeviceName: String?
+    private(set) var outputDevice: AudioOutputDevice?
+
+    var outputDeviceName: String? { outputDevice?.name }
+
+    /// Symbol for the menu bar icon: the speakers when they are driven directly, the system output otherwise.
+    var iconSymbolName: String {
+        switch target {
+            case .kef: "hifispeaker.2.fill"
+            case .system: outputDevice?.kind.symbolName ?? "speaker.slash.fill"
+        }
+    }
 
     /// Volume of whatever is currently being controlled, in `0 ... 1`.
     private(set) var volume: Double = 0
@@ -147,7 +157,7 @@ class KEFControlLogic {
 
     private func updateTarget() {
         let device = systemAudioControl.device
-        outputDeviceName = device?.name
+        outputDevice = device
         let isKEF = device.map { isKEF($0) } ?? false
         target = isKEF ? .kef : .system(isSupported: systemAudioControl.isVolumeControlAvailable)
         refreshPlaybackValues()

@@ -10,6 +10,7 @@
 		2DBA12433774199453CCC552 /* KEFControlLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA14AA2B980DDB900DF9BD /* KEFControlLogic.swift */; };
 		2DBA1244377419945300A001 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA14AB2B980DDB900DA001 /* AppSettings.swift */; };
 		2DBA1245377419945300A002 /* SettingsScreen.Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA14AC2B980DDB900DA002 /* SettingsScreen.Component.swift */; };
+		2DBA1246377419945300A003 /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA14AD2B980DDB900DA003 /* MenuBarIcon.swift */; };
 		FA5AF8B32B5093F5006DBB91 /* KEFControlMenuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5AF8AC2B5093F5006DBB91 /* KEFControlMenuApp.swift */; };
 		FA5AF8B52B5093F5006DBB91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA5AF8B02B5093F5006DBB91 /* Assets.xcassets */; };
 		FA5AF8B62B5093F5006DBB91 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA5AF8B22B5093F5006DBB91 /* Preview Assets.xcassets */; };
@@ -21,6 +22,7 @@
 		2DBA14AA2B980DDB900DF9BD /* KEFControlLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KEFControlLogic.swift; sourceTree = "<group>"; };
 		2DBA14AB2B980DDB900DA001 /* AppSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		2DBA14AC2B980DDB900DA002 /* SettingsScreen.Component.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsScreen.Component.swift; sourceTree = "<group>"; };
+		2DBA14AD2B980DDB900DA003 /* MenuBarIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarIcon.swift; sourceTree = "<group>"; };
 		FA5AF8992B50938C006DBB91 /* KEFControlMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KEFControlMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA5AF8AC2B5093F5006DBB91 /* KEFControlMenuApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KEFControlMenuApp.swift; sourceTree = "<group>"; };
 		FA5AF8AF2B5093F5006DBB91 /* KEFControlMenu.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = KEFControlMenu.entitlements; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 			children = (
 				FA5AF8AC2B5093F5006DBB91 /* KEFControlMenuApp.swift */,
 				2DBA14AA2B980DDB900DF9BD /* KEFControlLogic.swift */,
+				2DBA14AD2B980DDB900DA003 /* MenuBarIcon.swift */,
 				2DBA14AC2B980DDB900DA002 /* SettingsScreen.Component.swift */,
 				2DBA14AB2B980DDB900DA001 /* AppSettings.swift */,
 			);
@@ -176,6 +179,7 @@
 			files = (
 				FA5AF8B32B5093F5006DBB91 /* KEFControlMenuApp.swift in Sources */,
 				2DBA12433774199453CCC552 /* KEFControlLogic.swift in Sources */,
+				2DBA1246377419945300A003 /* MenuBarIcon.swift in Sources */,
 				2DBA1245377419945300A002 /* SettingsScreen.Component.swift in Sources */,
 				2DBA1244377419945300A001 /* AppSettings.swift in Sources */,
 			);
