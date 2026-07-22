@@ -19,7 +19,7 @@ public actor KEFControl {
     public var eventPublisher: AnyPublisher<Event, Never> { eventSubject.eraseToAnyPublisher() }
 
     private var api: KEFApi
-    private var ip: String?
+    private var address: String?
     private var defaultInput: PlaybackInfo.Source = .usb
 
     private(set) public var audioSystem: AudioSystem = .init(name: "KEF", model: .unknown)
@@ -29,13 +29,13 @@ public actor KEFControl {
         self.api = api
     }
 
-    public func set(ip: String, defaultInput: PlaybackInfo.Source, andStartStreaming: Bool) async {
-        self.ip = ip
+    public func set(address: String, defaultInput: PlaybackInfo.Source, andStartStreaming: Bool) async {
+        self.address = address
         self.defaultInput = defaultInput
 
         do {
             if streamingStarted || andStartStreaming {
-                try stopEventListening()
+                stopEventListening()
                 try await startEventListening()
             } else {
                 try await updateInformationFromAudioSystem()
@@ -58,12 +58,15 @@ public actor KEFControl {
     private let eventSubject: PassthroughSubject<Event, Never> = .init()
 
     public func toggleMute() async throws {
-        guard let ip else { throw KEFProblem.isNotSetup("No ip address") }
+        guard let address else { throw KEFProblem.isNotSetup("No ip address") }
 
         try await turnOnIfNeeded()
+        let newValue = !playbackInfo.isMuted
+        playbackInfo.isMuted = newValue
+        eventSubject.send(.playback(playbackInfo))
         Task.detached { [self] in
             do {
-                try await api.set(value: !playbackInfo.isMuted, for: \.isMuted, ip: ip)
+                try await api.set(value: newValue, for: \.isMuted, ip: address)
             } catch {
                 await memoir.error(error)
             }
@@ -71,7 +74,7 @@ public actor KEFControl {
     }
 
     public func changeVolume(by dVolume: Int32) async throws -> Int32 {
-        guard let ip else { throw KEFProblem.isNotSetup("No ip address") }
+        guard let address else { throw KEFProblem.isNotSetup("No ip address") }
 
         try await turnOnIfNeeded()
         let newVolume = min(100, max(0, playbackInfo.volume + dVolume))
@@ -79,7 +82,7 @@ public actor KEFControl {
             playbackInfo.volume = newVolume
             Task.detached { [self] in
                 do {
-                    try await api.set(value: newVolume, for: \.volume, ip: ip)
+                    try await api.set(value: newVolume, for: \.volume, ip: address)
                 } catch {
                     await memoir.error(error)
                 }
@@ -89,17 +92,23 @@ public actor KEFControl {
     }
 
     public func turnOnIfNeeded() async throws {
-        guard let ip else { throw KEFProblem.isNotSetup("No ip address") }
-        guard playbackInfo.source == .standby else { return }
-
-        try await api.set(value: defaultInput, for: \.physicalSource, ip: ip)
+        try await setSource(to: defaultInput, ifCurrentIs: .standby)
     }
 
     public func setInput(to input: PlaybackInfo.Source) async throws {
-        guard let ip else { throw KEFProblem.isNotSetup("No ip address") }
-        guard playbackInfo.source != .standby else { return try await turnOnIfNeeded() }
+        defaultInput = input
+        try await setSource(to: input, ifCurrentIs: nil)
+    }
 
-        try await api.set(value: defaultInput, for: \.physicalSource, ip: ip)
+    private func setSource(to input: PlaybackInfo.Source, ifCurrentIs required: PlaybackInfo.Source?) async throws {
+        guard let address else { throw KEFProblem.isNotSetup("No ip address") }
+        guard required == nil || playbackInfo.source == required else { return }
+        guard playbackInfo.source != input else { return }
+
+        try await api.set(value: input, for: \.physicalSource, ip: address)
+        // Assume it worked until the event stream says otherwise, so repeated calls do not re-send the same command.
+        playbackInfo.source = input
+        eventSubject.send(.playback(playbackInfo))
     }
 
     private var lastGotVolume: Int32 = -1
@@ -108,14 +117,14 @@ public actor KEFControl {
     private var eventStreamId: String?
 
     public func startEventListening() async throws {
-        guard let ip else { throw KEFProblem.isNotSetup("No ip address") }
+        guard let address else { throw KEFProblem.isNotSetup("No ip address") }
         guard !streamingStarted else { return memoir.warning("Already listening to the events") }
 
         streamingStarted = true
 
         do {
             try await updateInformationFromAudioSystem()
-            let (stream, id) = try api.events(for: ip)
+            let (stream, id) = try api.events(for: address)
             eventStreamId = id
 
             memoir.debug("Started listening to events; subscription: \(id)")
@@ -124,25 +133,37 @@ public actor KEFControl {
                 for await value in stream {
                     try await process(value: value)
                 }
+                await eventListeningFinished()
             }
         } catch {
             memoir.error(error)
+            eventListeningFinished()
         }
+    }
 
+    public func stopEventListening() {
+        guard streamingStarted, let eventStreamId else { return }
+
+        api.terminateEventsStream(id: eventStreamId)
+        memoir.warning("Stopped listening to events; subscription: \(eventStreamId)")
+        eventListeningFinished()
+    }
+
+    private func eventListeningFinished() {
         streamingStarted = false
         eventStreamId = nil
     }
 
     private func updateInformationFromAudioSystem() async throws {
-        guard let ip else { throw KEFProblem.isNotSetup("No ip address") }
+        guard let address else { throw KEFProblem.isNotSetup("No ip address") }
 
-        audioSystem.name = try await api.get(\.name, ip: ip)
-        audioSystem.model = try await api.get(\.model, ip: ip)
+        audioSystem.name = try await api.get(\.name, ip: address)
+        audioSystem.model = try await api.get(\.model, ip: address)
         eventSubject.send(.system(audioSystem))
 
-        playbackInfo.isMuted = try await api.get(\.isMuted, ip: ip)
-        playbackInfo.volume = try await api.get(\.volume, ip: ip)
-        playbackInfo.source = try await api.get(\.physicalSource, ip: ip)
+        playbackInfo.isMuted = try await api.get(\.isMuted, ip: address)
+        playbackInfo.volume = try await api.get(\.volume, ip: address)
+        playbackInfo.source = try await api.get(\.physicalSource, ip: address)
         eventSubject.send(.playback(playbackInfo))
     }
 
@@ -158,9 +179,9 @@ public actor KEFControl {
             case .volume(let volume):
                 lastGotVolume = volume
                 volumeUpdatedTask?.cancel()
-                volumeUpdatedTask = Task {
-                    volumeUpdatedTask = nil
+                volumeUpdatedTask = Task { [self] in
                     try await Task.sleep(for: .seconds(1))
+                    volumeUpdatedTask = nil
                     playbackInfo.volume = lastGotVolume
                     eventSubject.send(.playback(playbackInfo))
                 }
@@ -182,12 +203,5 @@ public actor KEFControl {
         if audioSystemUpdated {
             eventSubject.send(.system(audioSystem))
         }
-    }
-
-    public func stopEventListening() throws {
-        guard streamingStarted, let eventStreamId else { return }
-
-        api.terminateEventsStream(id: eventStreamId)
-        memoir.warning("Stopped listening to events; subscription: \(eventStreamId)")
     }
 }

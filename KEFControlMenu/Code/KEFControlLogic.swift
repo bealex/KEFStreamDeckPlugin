@@ -16,72 +16,168 @@ extension KeyboardShortcuts.Name {
     static let volumeDown = Self("kef.volumeDown")
 }
 
-@Observable
+@Observable @MainActor
 class KEFControlLogic {
-    var audioSystem: AudioSystem?
-    var playbackInfo: PlaybackInfo? {
-        didSet {
-            self.volume = Double(playbackInfo.map(\.volume) ?? 0) / 100.0
-        }
+    /// What the volume shortcuts currently drive.
+    enum Target: Equatable {
+        case kef
+        case system(isSupported: Bool)
     }
 
-    var volume: Double = 0
+    let settings: AppSettings
 
-    @ObservationIgnored
-    private let kefControl: KEFControl
-    @ObservationIgnored
-    private var kefEventsSubscription: AnyCancellable?
+    private(set) var audioSystem: AudioSystem?
+    private(set) var playbackInfo: PlaybackInfo?
 
-    init() {
+    private(set) var target: Target = .system(isSupported: false)
+    private(set) var outputDeviceName: String?
+
+    /// Volume of whatever is currently being controlled, in `0 ... 1`.
+    private(set) var volume: Double = 0
+    private(set) var isMuted: Bool = false
+
+    init(settings: AppSettings) {
+        self.settings = settings
         kefControl = .init(api: KEFNetworkApi())
+        systemAudioControl = .init()
 
-        Task { @MainActor [self] in
-            await kefControl.set(ip: "192.168.23.106", defaultInput: .optical, andStartStreaming: true)
+        systemEventsSubscription = systemAudioControl.eventPublisher.sink { [weak self] event in
+            guard let self else { return }
+
+            switch event {
+                case .device: updateTarget()
+                case .playback: refreshPlaybackValues()
+            }
+        }
+        systemAudioControl.startMonitoring()
+
+        settingsSubscription = settings.changePublisher.sink { [weak self] in
+            self?.applySettings()
+        }
+
+        Task { [weak self] in
+            guard let self else { return }
+
             kefEventsSubscription = await kefControl.eventPublisher.sink { [weak self] event in
-                guard let self else { return }
+                Task { @MainActor [weak self] in
+                    guard let self else { return }
 
-                Task { @MainActor in
                     switch event {
                         case .playback(let info):
-                            self.playbackInfo = info
-                            self.volume = Double(info.volume) / 100.0
+                            playbackInfo = info
+                            refreshPlaybackValues()
                         case .system(let info):
-                            self.audioSystem = info
+                            // The device name arrives here, and it is what identifies the speakers in CoreAudio.
+                            audioSystem = info
+                            updateTarget()
                     }
                 }
             }
-            audioSystem = await self.kefControl.audioSystem
-            playbackInfo = await self.kefControl.playbackInfo
+            await connectToSpeakers()
         }
-
-        KeyboardShortcuts.setShortcut(.init(.f17, modifiers: []), for: .volumeUp)
-        KeyboardShortcuts.setShortcut(.init(.f19, modifiers: []), for: .volumeDown)
 
         KeyboardShortcuts.onKeyUp(for: .volumeUp) { [weak self] in
-            guard let self else { return }
-
-            Task {
-                let newVolume = try await self.kefControl.changeVolume(by: -1)
-                Task { @MainActor in
-                    self.playbackInfo?.volume = newVolume
-                }
-            }
+            MainActor.assumeIsolated { self?.changeVolume(steps: 1) }
         }
         KeyboardShortcuts.onKeyUp(for: .volumeDown) { [weak self] in
-            guard let self else { return }
-
-            Task {
-                let newVolume = try await self.kefControl.changeVolume(by: 1)
-                Task { @MainActor in
-                    self.playbackInfo?.volume = newVolume
-                }
-            }
+            MainActor.assumeIsolated { self?.changeVolume(steps: -1) }
         }
     }
 
     func update(input: PlaybackInfo.Source) {
-        Task {
-            await kefControl.update(defaultInput: input)
+        Task { try? await kefControl.setInput(to: input) }
+    }
+
+    func toggleMute() {
+        switch target {
+            case .kef: Task { try? await kefControl.toggleMute() }
+            case .system: systemAudioControl.toggleMute()
         }
+    }
+
+    @ObservationIgnored
+    private let kefControl: KEFControl
+    @ObservationIgnored
+    private let systemAudioControl: SystemAudioControl
+    @ObservationIgnored
+    private var kefEventsSubscription: AnyCancellable?
+    @ObservationIgnored
+    private var systemEventsSubscription: AnyCancellable?
+    @ObservationIgnored
+    private var settingsSubscription: AnyCancellable?
+
+    @ObservationIgnored
+    private var connectedAddress: String?
+
+    private func changeVolume(steps: Int) {
+        switch target {
+            case .kef:
+                Task { [weak self] in
+                    guard let self else { return }
+
+                    let delta = Int32(steps) * Int32(settings.kefVolumeStep)
+                    guard let newVolume = try? await kefControl.changeVolume(by: delta) else { return }
+
+                    playbackInfo?.volume = newVolume
+                    refreshPlaybackValues()
+                }
+            case .system:
+                let step = 1.0 / Double(settings.systemVolumeStepCount)
+                volume = systemAudioControl.changeVolume(by: Double(steps) * step)
+        }
+    }
+
+    private func applySettings() {
+        Task { await connectToSpeakers() }
+        updateTarget()
+    }
+
+    private func connectToSpeakers() async {
+        let address = settings.speakerAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !address.isEmpty else { return }
+        // Reconnecting restarts the event stream, so only do it when the address really changed.
+        let isNewAddress = address != connectedAddress
+        connectedAddress = address
+
+        await kefControl.set(address: address, defaultInput: settings.defaultInput, andStartStreaming: isNewAddress)
+        audioSystem = await kefControl.audioSystem
+        playbackInfo = await kefControl.playbackInfo
+        updateTarget()
+    }
+
+    private func updateTarget() {
+        let device = systemAudioControl.device
+        outputDeviceName = device?.name
+        let isKEF = device.map { isKEF($0) } ?? false
+        target = isKEF ? .kef : .system(isSupported: systemAudioControl.isVolumeControlAvailable)
+        refreshPlaybackValues()
+    }
+
+    private func refreshPlaybackValues() {
+        switch target {
+            case .kef:
+                volume = Double(playbackInfo?.volume ?? 0) / 100.0
+                isMuted = playbackInfo?.isMuted ?? false
+            case .system:
+                volume = systemAudioControl.volume
+                isMuted = systemAudioControl.isMuted
+        }
+    }
+
+    /// The speakers show up in CoreAudio only over USB, under a name we have to recognise from what we know about them.
+    private func isKEF(_ device: AudioOutputDevice) -> Bool {
+        var names: [String] = [ "kef" ]
+        names.append(contentsOf: settings.model.audioDeviceNameHints)
+        names.append(contentsOf: audioSystem?.model.audioDeviceNameHints ?? [])
+        if let name = audioSystem?.name.lowercased(), name.count >= 3 {
+            names.append(name)
+        }
+        let hint = settings.outputDeviceNameHint.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if !hint.isEmpty {
+            names.append(hint)
+        }
+
+        let haystack = "\(device.name) \(device.uid)".lowercased()
+        return names.contains { haystack.contains($0) }
     }
 }

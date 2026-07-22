@@ -5,44 +5,74 @@
 //  Created by Alexander Babaev on 11/1/24.
 //
 
+import KEFControl
 import SwiftUI
 
 @MainActor
 @main
 struct KEFControlMenuApp: App {
     @State
-    var logic: KEFControlLogic = .init()
+    var logic: KEFControlLogic = .init(settings: .init())
 
     var body: some Scene {
         MenuBarExtra {
-            Text("LSX System")
-            Text("Model: \(logic.audioSystem.map { "\($0.model)" } ?? "—")")
-            Text("Name: \(logic.audioSystem.map { "\($0.name)" } ?? "—")")
-            Text("Current volume: \(logic.playbackInfo.map { "\($0.volume)" } ?? "0")")
+            Text("Output: \(logic.outputDeviceName ?? "—")")
+            Text(controlledTargetTitle)
+            if isVolumeControllable {
+                Text("Volume: \(Int(round(logic.volume * 100)))%\(logic.isMuted ? " (muted)" : "")")
+            }
+            if logic.settings.speakerAddress.isEmpty {
+                Text("No speaker address — open Settings")
+            }
 
             Divider()
 
-            Menu("Input") {
-                Button(
-                    action: { logic.update(input: .usb) },
-                    label: {
-                        Label(title: { Text("USB") }, icon: { logic.playbackInfo?.source == .usb ? Image(systemName: "checkmark") : Image("") })
-                    }
-                )
-                Button(
-                    action: { logic.update(input: .optical) },
-                    label: {
-                        Label(title: { Text("Optical") }, icon: { logic.playbackInfo?.source == .optical ? Image(systemName: "checkmark") : Image("") })
-                    }
-                )
-            }
+            Button(logic.isMuted ? "Unmute" : "Mute") { logic.toggleMute() }
+                .disabled(!isVolumeControllable)
 
+            Picker(
+                "Speaker input",
+                selection: Binding(get: { logic.playbackInfo?.source ?? .standby }, set: { logic.update(input: $0) }),
+                content: {
+                    ForEach(PlaybackInfo.Source.selectable, id: \.self) { Text($0.title).tag($0) }
+                }
+            )
+
+            Divider()
+
+            SettingsLink { Label("Settings…", systemImage: "gearshape") }
+                .keyboardShortcut(",")
             Button { NSApplication.shared.terminate(nil) } label: { Label("Quit", systemImage: "door.right.hand.open") }
                 .keyboardShortcut("Q")
         } label: {
             Label(title: { Text("") }, icon: { icon })
         }
         .menuBarExtraStyle(.menu)
+
+        Settings {
+            SettingsScreen.Component(
+                settings: logic.settings,
+                outputDeviceName: logic.outputDeviceName,
+                isControllingKEF: logic.target == .kef
+            )
+        }
+    }
+
+    private var isVolumeControllable: Bool {
+        switch logic.target {
+            case .kef: true
+            case .system(let isSupported): isSupported
+        }
+    }
+
+    private var controlledTargetTitle: String {
+        switch logic.target {
+            case .kef:
+                let system = logic.audioSystem
+                return "Controls: \(system.map { "\($0.name) (\($0.model.title))" } ?? "the speakers")"
+            case .system(let isSupported):
+                return isSupported ? "Controls: system volume" : "This output has no volume control"
+        }
     }
 
     private var icon: some View {

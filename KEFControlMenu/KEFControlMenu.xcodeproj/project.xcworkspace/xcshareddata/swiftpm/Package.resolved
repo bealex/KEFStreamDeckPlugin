@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:sindresorhus/KeyboardShortcuts.git",
       "state" : {
-        "revision" : "c252200141e4abaecf30c14ea474dc009f56d553",
-        "version" : "1.16.1"
+        "revision" : "1aef85578fdd4f9eaeeb8d53b7b4fc31bf08fe27",
+        "version" : "2.4.0"
       }
     },
     {
@@ -14,7 +14,7 @@
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:redmadrobot-spb/memoirs-ios.git",
       "state" : {
-        "revision" : "fc33c113628506ce8338c2a5216b7fff6af87e30"
+        "revision" : "e44197b092166fa66f54c13ad46601872aa837de"
       }
     }
   ],

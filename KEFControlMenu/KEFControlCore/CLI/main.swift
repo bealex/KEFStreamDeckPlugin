@@ -9,11 +9,23 @@
 import Foundation
 import KEFControl
 
+guard CommandLine.arguments.count > 1 else {
+    print("Usage: kefcli <speaker-address>")
+    exit(1)
+}
+
+let address = CommandLine.arguments[1]
+
 Task {
-    let api = KEFNetworkApi()
-    let (stream, id) = try api.events(for: "192.168.23.106")
-    for await event in stream {
-        print("Event happened: \(event)")
+    do {
+        let api = KEFNetworkApi()
+        let (stream, _) = try api.events(for: address)
+        for await event in stream {
+            print("Event happened: \(event)")
+        }
+    } catch {
+        print("Error: \(error)")
+        exit(1)
     }
 }
 

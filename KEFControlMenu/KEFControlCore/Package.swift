@@ -13,7 +13,7 @@ let package = Package(
         .executable(name: "kefcli", targets: [ "kefcli" ]),
     ],
     dependencies: [
-        .package(url: "git@github.com:redmadrobot-spb/memoirs-ios.git", revision: "fc33c113628506ce8338c2a5216b7fff6af87e30"),
+        .package(url: "git@github.com:redmadrobot-spb/memoirs-ios.git", revision: "e44197b092166fa66f54c13ad46601872aa837de"),
     ],
     targets: [
         .target(name: "KEFControl", dependencies: [ .product(name: "Memoirs", package: "memoirs-ios") ], path: "Sources"),
