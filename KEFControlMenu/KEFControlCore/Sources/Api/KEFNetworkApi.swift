@@ -17,7 +17,8 @@ public class KEFNetworkApi: KEFApi {
         var result = URLSessionConfiguration.default
         result.httpMaximumConnectionsPerHost = 10
         result.timeoutIntervalForRequest = 2
-        result.waitsForConnectivity = true
+        // Waiting for connectivity hides a blocked local network behind a request that never finishes.
+        result.waitsForConnectivity = false
         result.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         result.urlCache = nil
         result.httpShouldUsePipelining = true

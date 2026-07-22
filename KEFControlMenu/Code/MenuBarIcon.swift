@@ -21,8 +21,9 @@ enum MenuBarIcon {
     private static let segmentGap: CGFloat = 0.75
     private static let dimmedAlpha: CGFloat = 0.3
 
-    static func image(symbolName: String, volume: Double, isMuted: Bool) -> NSImage {
-        let filledSegments = isMuted ? 0 : segmentCount(for: volume)
+    /// `isDimmed` is for speakers that are asleep: the glyph fades, and the bar shows nothing.
+    static func image(symbolName: String, volume: Double, isMuted: Bool, isDimmed: Bool = false) -> NSImage {
+        let filledSegments = isMuted || isDimmed ? 0 : segmentCount(for: volume)
 
         let image = NSImage(size: size)
         image.lockFocus()
@@ -33,7 +34,7 @@ enum MenuBarIcon {
         guard let context = NSGraphicsContext.current else { return image }
 
         context.imageInterpolation = .high
-        draw(symbolName: symbolName)
+        draw(symbolName: symbolName, alpha: isDimmed ? dimmedAlpha : 1)
         // Punch the bar area out of the glyph, so the two never touch whatever the glyph's shape is.
         NSRect(x: 0, y: 0, width: size.width, height: barHeight + barBorder).fill(using: .clear)
         drawBar(filledSegments: filledSegments)
@@ -47,7 +48,7 @@ enum MenuBarIcon {
         return (levels.firstIndex { volume <= $0 } ?? levels.count - 1) + 1
     }
 
-    private static func draw(symbolName: String) {
+    private static func draw(symbolName: String, alpha: CGFloat) {
         let configuration = NSImage.SymbolConfiguration(pointSize: 12, weight: .regular)
         guard let symbol = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)?
             .withSymbolConfiguration(configuration)
@@ -62,7 +63,9 @@ enum MenuBarIcon {
             x: available.midX - scaled.width / 2,
             y: available.midY - scaled.height / 2
         )
-        symbol.draw(in: NSRect(origin: origin, size: scaled))
+        symbol.draw(
+            in: NSRect(origin: origin, size: scaled), from: .zero, operation: .sourceOver, fraction: alpha
+        )
     }
 
     private static func drawBar(filledSegments: Int) {

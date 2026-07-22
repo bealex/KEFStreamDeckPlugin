@@ -14,6 +14,7 @@ public actor KEFControl {
     public enum Event {
         case playback(PlaybackInfo)
         case system(AudioSystem)
+        case reachability(Bool)
     }
 
     public var eventPublisher: AnyPublisher<Event, Never> { eventSubject.eraseToAnyPublisher() }
@@ -24,6 +25,8 @@ public actor KEFControl {
 
     private(set) public var audioSystem: AudioSystem = .init(name: "KEF", model: .unknown)
     private(set) public var playbackInfo: PlaybackInfo = .init()
+    /// Whether the last exchange with the speakers actually got through.
+    private(set) public var isReachable: Bool = false
 
     public init(api: KEFApi) {
         self.api = api
@@ -95,6 +98,10 @@ public actor KEFControl {
         try await setSource(to: defaultInput, ifCurrentIs: .standby)
     }
 
+    public func standBy() async throws {
+        try await setSource(to: .standby, ifCurrentIs: nil)
+    }
+
     public func setInput(to input: PlaybackInfo.Source) async throws {
         defaultInput = input
         try await setSource(to: input, ifCurrentIs: nil)
@@ -157,13 +164,21 @@ public actor KEFControl {
     private func updateInformationFromAudioSystem() async throws {
         guard let address else { throw KEFProblem.isNotSetup("No ip address") }
 
-        audioSystem.name = try await api.get(\.name, ip: address)
-        audioSystem.model = try await api.get(\.model, ip: address)
-        eventSubject.send(.system(audioSystem))
+        do {
+            audioSystem.name = try await api.get(\.name, ip: address)
+            audioSystem.model = try await api.get(\.model, ip: address)
+            playbackInfo.isMuted = try await api.get(\.isMuted, ip: address)
+            playbackInfo.volume = try await api.get(\.volume, ip: address)
+            playbackInfo.source = try await api.get(\.physicalSource, ip: address)
+        } catch {
+            isReachable = false
+            eventSubject.send(.reachability(false))
+            throw error
+        }
 
-        playbackInfo.isMuted = try await api.get(\.isMuted, ip: address)
-        playbackInfo.volume = try await api.get(\.volume, ip: address)
-        playbackInfo.source = try await api.get(\.physicalSource, ip: address)
+        isReachable = true
+        eventSubject.send(.reachability(true))
+        eventSubject.send(.system(audioSystem))
         eventSubject.send(.playback(playbackInfo))
     }
 

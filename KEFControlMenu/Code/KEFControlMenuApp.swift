@@ -21,12 +21,15 @@ struct KEFControlMenuApp: App {
             if isVolumeControllable {
                 Text("Volume: \(Int(round(logic.volume * 100)))%\(logic.isMuted ? " (muted)" : "")")
             }
-            if logic.settings.speakerAddress.isEmpty {
-                Text("No speaker address — open Settings")
-            }
+            Text("Speakers: \(logic.speakerState.title)")
 
             Divider()
 
+            switch logic.speakerState {
+                case .standby: Button("Wake up") { logic.wakeUpSpeakers() }
+                case .playing: Button("Send to standby") { logic.sendSpeakersToStandby() }
+                case .notConfigured, .unreachable: EmptyView()
+            }
             Button(logic.isMuted ? "Unmute" : "Mute") { logic.toggleMute() }
                 .disabled(!isVolumeControllable)
 
@@ -76,7 +79,12 @@ struct KEFControlMenuApp: App {
     }
 
     private var icon: some View {
-        Image(nsImage: MenuBarIcon.image(symbolName: logic.iconSymbolName, volume: logic.volume, isMuted: logic.isMuted))
+        Image(nsImage: MenuBarIcon.image(
+            symbolName: logic.iconSymbolName,
+            volume: logic.volume,
+            isMuted: logic.isMuted,
+            isDimmed: logic.target == .kef && !logic.speakerState.isAwake
+        ))
             .accessibilityLabel(Text("Volume \(Int(round(logic.volume * 100))) percent"))
     }
 }

@@ -24,11 +24,33 @@ class KEFControlLogic {
         case system(isSupported: Bool)
     }
 
+    /// What the speakers are doing, as far as we can tell over the network.
+    enum SpeakerState: Equatable {
+        case notConfigured
+        case unreachable
+        case standby
+        case playing(PlaybackInfo.Source)
+
+        var title: String {
+            switch self {
+                case .notConfigured: "no address set"
+                case .unreachable: "not reachable"
+                case .standby: "standby"
+                case .playing(let source): source.title
+            }
+        }
+
+        var isAwake: Bool {
+            if case .playing = self { true } else { false }
+        }
+    }
+
     let settings: AppSettings
 
     private(set) var audioSystem: AudioSystem?
     private(set) var playbackInfo: PlaybackInfo?
 
+    private(set) var speakerState: SpeakerState = .notConfigured
     private(set) var target: Target = .system(isSupported: false)
     private(set) var outputDevice: AudioOutputDevice?
 
@@ -76,10 +98,14 @@ class KEFControlLogic {
                         case .playback(let info):
                             playbackInfo = info
                             refreshPlaybackValues()
+                            refreshSpeakerState()
                         case .system(let info):
                             // The device name arrives here, and it is what identifies the speakers in CoreAudio.
                             audioSystem = info
                             updateTarget()
+                        case .reachability(let isReachable):
+                            isSpeakerReachable = isReachable
+                            refreshSpeakerState()
                     }
                 }
             }
@@ -96,6 +122,14 @@ class KEFControlLogic {
 
     func update(input: PlaybackInfo.Source) {
         Task { try? await kefControl.setInput(to: input) }
+    }
+
+    func wakeUpSpeakers() {
+        Task { try? await kefControl.turnOnIfNeeded() }
+    }
+
+    func sendSpeakersToStandby() {
+        Task { try? await kefControl.standBy() }
     }
 
     func toggleMute() {
@@ -118,6 +152,12 @@ class KEFControlLogic {
 
     @ObservationIgnored
     private var connectedAddress: String?
+    @ObservationIgnored
+    private var isSpeakerReachable: Bool = false
+    @ObservationIgnored
+    private var reconnectTask: Task<Void, Never>?
+
+    private static let reconnectInterval: Duration = .seconds(15)
 
     private func changeVolume(steps: Int) {
         switch target {
@@ -152,6 +192,7 @@ class KEFControlLogic {
         await kefControl.set(address: address, defaultInput: settings.defaultInput, andStartStreaming: isNewAddress)
         audioSystem = await kefControl.audioSystem
         playbackInfo = await kefControl.playbackInfo
+        isSpeakerReachable = await kefControl.isReachable
         updateTarget()
     }
 
@@ -161,6 +202,41 @@ class KEFControlLogic {
         let isKEF = device.map { isKEF($0) } ?? false
         target = isKEF ? .kef : .system(isSupported: systemAudioControl.isVolumeControlAvailable)
         refreshPlaybackValues()
+        refreshSpeakerState()
+    }
+
+    private func refreshSpeakerState() {
+        let address = settings.speakerAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        speakerState = if address.isEmpty {
+            .notConfigured
+        } else if !isSpeakerReachable {
+            .unreachable
+        } else if let source = playbackInfo?.source, source != .standby {
+            .playing(source)
+        } else {
+            .standby
+        }
+
+        if case .unreachable = speakerState {
+            startReconnecting()
+        } else {
+            reconnectTask?.cancel()
+            reconnectTask = nil
+        }
+    }
+
+    /// The speakers may be asleep, off the network, or waiting for Local Network access to be granted, so keep trying.
+    private func startReconnecting() {
+        guard reconnectTask == nil else { return }
+
+        reconnectTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: Self.reconnectInterval)
+                guard !Task.isCancelled, let self else { return }
+
+                await connectToSpeakers()
+            }
+        }
     }
 
     private func refreshPlaybackValues() {
