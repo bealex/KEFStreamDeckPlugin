@@ -55,6 +55,7 @@ struct KEFControlMenuApp: App {
         Settings {
             SettingsScreen.Component(
                 settings: logic.settings,
+                logic: logic,
                 outputDeviceName: logic.outputDeviceName,
                 isControllingKEF: logic.target == .kef
             )

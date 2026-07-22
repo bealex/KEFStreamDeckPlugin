@@ -19,6 +19,7 @@ extension SettingsScreen {
         @Bindable
         var settings: AppSettings
 
+        let logic: KEFControlLogic
         let outputDeviceName: String?
         let isControllingKEF: Bool
 
@@ -27,6 +28,36 @@ extension SettingsScreen {
                 Section("Speakers") {
                     TextField("Address", text: $settings.speakerAddress, prompt: Text("192.168.0.1"))
                         .textFieldStyle(.roundedBorder)
+                    LabeledContent(
+                        "Find on network",
+                        content: {
+                            Button(logic.isDiscovering ? "Searching…" : "Search") {
+                                Task { await logic.discoverSpeakers() }
+                            }
+                            .disabled(logic.isDiscovering)
+                        }
+                    )
+                    ForEach(logic.discoveredSpeakers) { speaker in
+                        Button(
+                            action: { logic.use(speaker) },
+                            label: {
+                                HStack {
+                                    Image(systemName: speaker.address == settings.speakerAddress
+                                        ? "checkmark.circle.fill"
+                                        : "hifispeaker")
+                                    VStack(alignment: .leading) {
+                                        Text(speaker.name)
+                                        Text("\(speaker.model.title) · \(speaker.address)")
+                                            .font(.footnote)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    Spacer()
+                                }
+                                .contentShape(Rectangle())
+                            }
+                        )
+                        .buttonStyle(.plain)
+                    }
                     Picker(
                         "Model",
                         selection: $settings.model,
@@ -84,5 +115,11 @@ extension SettingsScreen {
 }
 
 #Preview {
-    SettingsScreen.Component(settings: .init(defaults: .init()), outputDeviceName: "Built-in Output", isControllingKEF: false)
+    let settings: AppSettings = .init(defaults: .init())
+    return SettingsScreen.Component(
+        settings: settings,
+        logic: .init(settings: settings),
+        outputDeviceName: "Built-in Output",
+        isControllingKEF: false
+    )
 }

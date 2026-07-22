@@ -24,6 +24,20 @@ public struct AudioSystem: Equatable {
             }
         }
 
+        /// Recognises what KEF reports over its API and over Bonjour — `SP4041`, `LSX II`, and the like.
+        public init(kefIdentifiers: [String]) {
+            let values = kefIdentifiers.map { $0.lowercased() }
+            if values.contains("sp4041") || values.contains(where: { $0.contains("lsx") }) {
+                self = .lsxII
+            } else if values.contains(where: { $0.contains("ls50") }) {
+                self = .ls50
+            } else if values.contains(where: { $0.contains("ls60") }) {
+                self = .ls60
+            } else {
+                self = .unknown
+            }
+        }
+
         /// Fragments of a CoreAudio device name/uid that identify these speakers when they are connected over USB.
         public var audioDeviceNameHints: [String] {
             switch self {

@@ -51,6 +51,8 @@ class KEFControlLogic {
     private(set) var playbackInfo: PlaybackInfo?
 
     private(set) var speakerState: SpeakerState = .notConfigured
+    private(set) var discoveredSpeakers: [DiscoveredSpeaker] = []
+    private(set) var isDiscovering: Bool = false
     private(set) var target: Target = .system(isSupported: false)
     private(set) var outputDevice: AudioOutputDevice?
 
@@ -125,6 +127,22 @@ class KEFControlLogic {
         Task { try? await kefControl.setInput(to: input) }
     }
 
+    @discardableResult
+    func discoverSpeakers() async -> [DiscoveredSpeaker] {
+        guard !isDiscovering else { return discoveredSpeakers }
+
+        isDiscovering = true
+        discoveredSpeakers = await discovery.speakers()
+        isDiscovering = false
+        return discoveredSpeakers
+    }
+
+    /// Adopting a found speaker rewrites the settings, which reconnects through the usual path.
+    func use(_ speaker: DiscoveredSpeaker) {
+        settings.model = speaker.model
+        settings.speakerAddress = speaker.address
+    }
+
     func wakeUpSpeakers() {
         Task { try? await kefControl.turnOnIfNeeded() }
     }
@@ -144,6 +162,8 @@ class KEFControlLogic {
     private let kefControl: KEFControl
     @ObservationIgnored
     private let systemAudioControl: SystemAudioControl
+    @ObservationIgnored
+    private let discovery: KEFDiscovery = .init()
     @ObservationIgnored
     private var kefEventsSubscription: AnyCancellable?
     @ObservationIgnored
@@ -186,8 +206,15 @@ class KEFControlLogic {
     }
 
     private func connectToSpeakers() async {
-        let address = settings.speakerAddress.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !address.isEmpty else { return }
+        var address = settings.speakerAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        if address.isEmpty {
+            // Nothing configured yet: if exactly one speaker answers on the network, it is not a guess.
+            let found = await discoverSpeakers()
+            guard found.count == 1, let speaker = found.first else { return }
+
+            use(speaker)
+            address = speaker.address
+        }
         // Reconnecting restarts the event stream, so only do it when the address really changed.
         let isNewAddress = address != connectedAddress
         connectedAddress = address
