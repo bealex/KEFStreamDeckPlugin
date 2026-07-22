@@ -25,39 +25,46 @@ extension SettingsScreen {
 
         var body: some View {
             Form {
-                Section("Speakers") {
+                Section("Speakers on the network") {
+                    if logic.discoveredSpeakers.isEmpty {
+                        HStack {
+                            Text(logic.isDiscovering ? "Looking for speakers…" : "None found")
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            searchButton
+                        }
+                    }
+                    ForEach(Array(logic.discoveredSpeakers.enumerated()), id: \.element.id) { index, speaker in
+                        HStack(spacing: 8) {
+                            Button(
+                                action: { logic.use(speaker) },
+                                label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: speaker.instanceName == settings.speakerInstance
+                                            ? "checkmark.circle.fill"
+                                            : "hifispeaker")
+                                        VStack(alignment: .leading, spacing: 1) {
+                                            Text(speaker.name)
+                                            Text("\(speaker.model.title) · \(speaker.address)")
+                                                .font(.footnote)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        Spacer()
+                                    }
+                                    .contentShape(Rectangle())
+                                }
+                            )
+                            .buttonStyle(.plain)
+                            if index == 0 {
+                                searchButton
+                            }
+                        }
+                    }
+                }
+
+                Section("Connection") {
                     TextField("Address", text: $settings.speakerAddress, prompt: Text("192.168.0.1"))
                         .textFieldStyle(.roundedBorder)
-                    LabeledContent(
-                        "Find on network",
-                        content: {
-                            Button(logic.isDiscovering ? "Searching…" : "Search") {
-                                Task { await logic.discoverSpeakers() }
-                            }
-                            .disabled(logic.isDiscovering)
-                        }
-                    )
-                    ForEach(logic.discoveredSpeakers) { speaker in
-                        Button(
-                            action: { logic.use(speaker) },
-                            label: {
-                                HStack {
-                                    Image(systemName: speaker.address == settings.speakerAddress
-                                        ? "checkmark.circle.fill"
-                                        : "hifispeaker")
-                                    VStack(alignment: .leading) {
-                                        Text(speaker.name)
-                                        Text("\(speaker.model.title) · \(speaker.address)")
-                                            .font(.footnote)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    Spacer()
-                                }
-                                .contentShape(Rectangle())
-                            }
-                        )
-                        .buttonStyle(.plain)
-                    }
                     Picker(
                         "Model",
                         selection: $settings.model,
@@ -72,6 +79,9 @@ extension SettingsScreen {
                             ForEach(PlaybackInfo.Source.selectable, id: \.self) { Text($0.title).tag($0) }
                         }
                     )
+                    Text("Filled in by the search above; edit it only if the speakers are not found automatically.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
 
                 Section("System output") {
@@ -82,15 +92,6 @@ extension SettingsScreen {
                     Text(hintExplanation)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
-                }
-
-                Section("Volume") {
-                    Stepper(value: $settings.kefVolumeStep, in: 1 ... 10) {
-                        LabeledContent("Speaker step", value: "\(settings.kefVolumeStep) of 100")
-                    }
-                    Stepper(value: $settings.systemVolumeStepCount, in: 4 ... 32) {
-                        LabeledContent("System steps", value: "\(settings.systemVolumeStepCount)")
-                    }
                 }
 
                 Section("Shortcuts") {
@@ -105,6 +106,13 @@ extension SettingsScreen {
                 // The app is an accessory, so its settings window does not come forward on its own.
                 NSApplication.shared.activate(ignoringOtherApps: true)
             }
+        }
+
+        private var searchButton: some View {
+            Button(logic.isDiscovering ? "Searching…" : "Search") {
+                Task { await logic.discoverSpeakers() }
+            }
+            .disabled(logic.isDiscovering)
         }
 
         private var hintExplanation: String {

@@ -140,6 +140,7 @@ class KEFControlLogic {
     /// Adopting a found speaker rewrites the settings, which reconnects through the usual path.
     func use(_ speaker: DiscoveredSpeaker) {
         settings.model = speaker.model
+        settings.speakerInstance = speaker.instanceName
         settings.speakerAddress = speaker.address
     }
 
@@ -178,6 +179,11 @@ class KEFControlLogic {
     @ObservationIgnored
     private var monitorTask: Task<Void, Never>?
 
+    /// KEF volume is `0 ... 100`; one point per press matches how fine its own remote is.
+    private static let kefVolumeStep: Int32 = 1
+    /// Presses from silence to full on the system output. macOS itself uses 16.
+    private static let systemVolumeStepCount: Double = 16
+
     private static let monitorInterval: Duration = .seconds(15)
     /// Ticks between full re-reads while connected, in case the event stream stops delivering.
     private static let refreshEveryTicks: Int = 4
@@ -188,14 +194,14 @@ class KEFControlLogic {
                 Task { [weak self] in
                     guard let self else { return }
 
-                    let delta = Int32(steps) * Int32(settings.kefVolumeStep)
+                    let delta = Int32(steps) * Self.kefVolumeStep
                     guard let newVolume = try? await kefControl.changeVolume(by: delta) else { return }
 
                     playbackInfo?.volume = newVolume
                     refreshPlaybackValues()
                 }
             case .system:
-                let step = 1.0 / Double(settings.systemVolumeStepCount)
+                let step = 1.0 / Self.systemVolumeStepCount
                 volume = systemAudioControl.changeVolume(by: Double(steps) * step)
         }
     }
@@ -206,15 +212,8 @@ class KEFControlLogic {
     }
 
     private func connectToSpeakers() async {
-        var address = settings.speakerAddress.trimmingCharacters(in: .whitespacesAndNewlines)
-        if address.isEmpty {
-            // Nothing configured yet: if exactly one speaker answers on the network, it is not a guess.
-            let found = await discoverSpeakers()
-            guard found.count == 1, let speaker = found.first else { return }
-
-            use(speaker)
-            address = speaker.address
-        }
+        let address = await resolvedAddress()
+        guard !address.isEmpty else { return }
         // Reconnecting restarts the event stream, so only do it when the address really changed.
         let isNewAddress = address != connectedAddress
         connectedAddress = address
@@ -222,6 +221,32 @@ class KEFControlLogic {
         await kefControl.set(address: address, defaultInput: settings.defaultInput, andStartStreaming: isNewAddress)
         await readSpeakerState()
         updateTarget()
+    }
+
+    /// Bonjour decides the address when it can; a manually entered one is the fallback for when nothing answers.
+    private func resolvedAddress() async -> String {
+        let manual = settings.speakerAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        let found = await discoverSpeakers()
+
+        // Speakers we already adopted, wherever they moved to since.
+        if let known = found.first(where: { $0.instanceName == settings.speakerInstance }) {
+            if known.address != manual {
+                use(known)
+            }
+            return known.address
+        }
+        // An address typed by hand that turns out to be a speaker we can see: adopt it, so it can be followed later.
+        if let sameAddress = found.first(where: { $0.address == manual }) {
+            use(sameAddress)
+            return sameAddress.address
+        }
+        // Nothing adopted yet, and exactly one candidate is not a guess.
+        if manual.isEmpty, found.count == 1, let only = found.first {
+            use(only)
+            return only.address
+        }
+
+        return manual
     }
 
     private func updateTarget() {

@@ -16,25 +16,22 @@ import Observation
 final class AppSettings {
     private enum Key {
         static let speakerAddress: String = "kef.speakerAddress"
+        static let speakerInstance: String = "kef.speakerInstance"
         static let model: String = "kef.model"
         static let defaultInput: String = "kef.defaultInput"
         static let outputDeviceNameHint: String = "kef.outputDeviceNameHint"
-        static let kefVolumeStep: String = "kef.volumeStep"
-        static let systemVolumeStepCount: String = "system.volumeStepCount"
         static let didSetDefaultShortcuts: String = "shortcuts.didSetDefaults"
     }
 
     /// IP address or hostname of the speakers.
     var speakerAddress: String { didSet { didChange() } }
+    /// Bonjour instance of the speakers we adopted, so they can be followed to a new address.
+    var speakerInstance: String { didSet { didChange() } }
     var model: AudioSystem.Model { didSet { didChange() } }
     /// Input the speakers are switched to when they are woken up from standby.
     var defaultInput: PlaybackInfo.Source { didSet { didChange() } }
     /// Optional override for matching the speakers against the system output device, when the name is not obvious.
     var outputDeviceNameHint: String { didSet { didChange() } }
-    /// Step for the KEF volume, which is `0 ... 100`.
-    var kefVolumeStep: Int { didSet { didChange() } }
-    /// Number of steps the system volume takes from silence to maximum. macOS itself uses 16.
-    var systemVolumeStepCount: Int { didSet { didChange() } }
 
     var changePublisher: AnyPublisher<Void, Never> { changeSubject.eraseToAnyPublisher() }
 
@@ -42,11 +39,10 @@ final class AppSettings {
         self.defaults = defaults
 
         speakerAddress = defaults.string(forKey: Key.speakerAddress) ?? ""
+        speakerInstance = defaults.string(forKey: Key.speakerInstance) ?? ""
         model = defaults.string(forKey: Key.model).flatMap(AudioSystem.Model.init(rawValue:)) ?? .unknown
         defaultInput = defaults.string(forKey: Key.defaultInput).flatMap(PlaybackInfo.Source.init(rawValue:)) ?? .usb
         outputDeviceNameHint = defaults.string(forKey: Key.outputDeviceNameHint) ?? ""
-        kefVolumeStep = defaults.object(forKey: Key.kefVolumeStep) as? Int ?? 1
-        systemVolumeStepCount = defaults.object(forKey: Key.systemVolumeStepCount) as? Int ?? 16
 
         setDefaultShortcutsIfNeeded()
     }
@@ -58,11 +54,10 @@ final class AppSettings {
 
     private func didChange() {
         defaults.set(speakerAddress, forKey: Key.speakerAddress)
+        defaults.set(speakerInstance, forKey: Key.speakerInstance)
         defaults.set(model.rawValue, forKey: Key.model)
         defaults.set(defaultInput.rawValue, forKey: Key.defaultInput)
         defaults.set(outputDeviceNameHint, forKey: Key.outputDeviceNameHint)
-        defaults.set(kefVolumeStep, forKey: Key.kefVolumeStep)
-        defaults.set(systemVolumeStepCount, forKey: Key.systemVolumeStepCount)
 
         changeSubject.send()
     }
