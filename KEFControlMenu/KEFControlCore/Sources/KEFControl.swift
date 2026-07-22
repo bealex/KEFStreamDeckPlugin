@@ -48,6 +48,15 @@ public actor KEFControl {
         }
     }
 
+    /// Re-reads everything without disturbing the event stream.
+    public func refresh() async {
+        do {
+            try await updateInformationFromAudioSystem()
+        } catch {
+            memoir.error(error)
+        }
+    }
+
     public func update(defaultInput: PlaybackInfo.Source) async {
         self.defaultInput = defaultInput
         do {

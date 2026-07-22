@@ -110,6 +110,7 @@ class KEFControlLogic {
                 }
             }
             await connectToSpeakers()
+            startMonitoring()
         }
 
         KeyboardShortcuts.onKeyUp(for: .volumeUp) { [weak self] in
@@ -155,9 +156,11 @@ class KEFControlLogic {
     @ObservationIgnored
     private var isSpeakerReachable: Bool = false
     @ObservationIgnored
-    private var reconnectTask: Task<Void, Never>?
+    private var monitorTask: Task<Void, Never>?
 
-    private static let reconnectInterval: Duration = .seconds(15)
+    private static let monitorInterval: Duration = .seconds(15)
+    /// Ticks between full re-reads while connected, in case the event stream stops delivering.
+    private static let refreshEveryTicks: Int = 4
 
     private func changeVolume(steps: Int) {
         switch target {
@@ -190,9 +193,7 @@ class KEFControlLogic {
         connectedAddress = address
 
         await kefControl.set(address: address, defaultInput: settings.defaultInput, andStartStreaming: isNewAddress)
-        audioSystem = await kefControl.audioSystem
-        playbackInfo = await kefControl.playbackInfo
-        isSpeakerReachable = await kefControl.isReachable
+        await readSpeakerState()
         updateTarget()
     }
 
@@ -217,26 +218,38 @@ class KEFControlLogic {
             .standby
         }
 
-        if case .unreachable = speakerState {
-            startReconnecting()
-        } else {
-            reconnectTask?.cancel()
-            reconnectTask = nil
+    }
+
+    /// Reconnects while the speakers are away, and re-reads periodically once they are back, so the menu cannot
+    /// sit on stale state if the event stream stops delivering.
+    private func startMonitoring() {
+        guard monitorTask == nil else { return }
+
+        monitorTask = Task { [weak self] in
+            var tick = 0
+            while !Task.isCancelled {
+                try? await Task.sleep(for: Self.monitorInterval)
+                guard !Task.isCancelled, let self else { return }
+
+                tick += 1
+                if isSpeakerReachable {
+                    guard tick % Self.refreshEveryTicks == 0 else { continue }
+
+                    await kefControl.refresh()
+                    await readSpeakerState()
+                } else {
+                    await connectToSpeakers()
+                }
+            }
         }
     }
 
-    /// The speakers may be asleep, off the network, or waiting for Local Network access to be granted, so keep trying.
-    private func startReconnecting() {
-        guard reconnectTask == nil else { return }
-
-        reconnectTask = Task { [weak self] in
-            while !Task.isCancelled {
-                try? await Task.sleep(for: Self.reconnectInterval)
-                guard !Task.isCancelled, let self else { return }
-
-                await connectToSpeakers()
-            }
-        }
+    private func readSpeakerState() async {
+        audioSystem = await kefControl.audioSystem
+        playbackInfo = await kefControl.playbackInfo
+        isSpeakerReachable = await kefControl.isReachable
+        refreshPlaybackValues()
+        refreshSpeakerState()
     }
 
     private func refreshPlaybackValues() {

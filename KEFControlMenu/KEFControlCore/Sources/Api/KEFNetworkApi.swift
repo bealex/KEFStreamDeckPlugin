@@ -188,8 +188,12 @@ public class KEFNetworkApi: KEFApi {
 
     // Returns subscription queue id for long polling.
     private func subscribe(toJSONPaths: String, ip: String) async throws -> String? {
-        var urlRequest = URLRequest(url: try subscribeUrl(subscribeJson: toJSONPaths, address: ip))
+        // The speakers answer 501 "Invalid method" to a GET here; the subscription has to be POSTed as a body.
+        var urlRequest = URLRequest(url: try subscribeUrl(address: ip))
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.setValue("keep-alive", forHTTPHeaderField: "Connection")
+        urlRequest.httpBody = "{\"subscribe\": \(toJSONPaths)}".data(using: .utf8)
         let (response, data) = try await request(urlRequest, in: Self.urlSessionForPolling)
         let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
         guard statusCode / 100 == 2 else {
@@ -285,16 +289,9 @@ public class KEFNetworkApi: KEFApi {
         return url
     }
 
-    private func subscribeUrl(subscribeJson: String, address: String) throws -> URL {
+    private func subscribeUrl(address: String) throws -> URL {
         let urlString = "http://\(address)/api/event/modifyQueue"
-        guard let baseUrl = URL(string: urlString) else { fatalError("Can't create URL for \(urlString)") }
-        guard var urlComponents = URLComponents(url: baseUrl, resolvingAgainstBaseURL: false) else { throw KEFProblem.cantProcessUrl }
-
-        urlComponents.queryItems = [
-            URLQueryItem(name: "queueId", value: ""),
-            URLQueryItem(name: "subscribe", value: subscribeJson),
-        ]
-        guard let url = urlComponents.url else { throw KEFProblem.cantProcessUrl }
+        guard let url = URL(string: urlString) else { throw KEFProblem.cantProcessUrl }
 
         return url
     }
